@@ -8,4 +8,4 @@ Chronological log of meaningful work. Each entry links to the commit where the w
 
 Consolidated a dozen scattered learning repos into this one. Pulled in topic notes and daily journals from the old Professional Development Diary, distilled one-page write-ups for every project repo worth remembering, and archived the originals. Wrote a CLAUDE.md and dropped in the `mj-rewrite` agent so future notes stay in the same voice.
 
-<!-- commit-sha: pending -->
+[`5b0ff2d`](https://github.com/MjMoshiri/Learnings/commit/5b0ff2d07f31f16409648067ea130603cca1aaf1)
