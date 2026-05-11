@@ -1,11 +1,6 @@
 # To Learn
 
-**Workflow Guide:** When a topic from this list is learned and a document is created, please do the following:
-1.  **Hyperlink the Concept:** In the source document where the topic was mentioned, update the text to hyperlink to the newly created local document.
-2.  **Remove from List:** Remove the corresponding row from the table below.
-3.  **Index the New Document:** Run `python3 knowledge_base.py add <path_to_new_doc.md>` to add it to the knowledge base.
-
-This file tracks concepts and topics that have emerged during our discussions and are candidates for deeper exploration.
+Backlog of topics that surfaced while writing notes. When a topic is covered, add the note under the right `notes/<topic>/` folder, hyperlink the source document to it, and remove the row from the table.
 
 | Topic | Source | Notes |
 | :--- | :--- | :--- |
