@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+# Usage: bin/new-note <topic> <slug>
+# Creates topics/<topic>/<slug>.md with frontmatter and a log entry pointing at it.
+
+set -e
+
+if [ $# -lt 2 ]; then
+  echo "usage: $0 <topic> <slug>" >&2
+  exit 1
+fi
+
+topic="$1"
+slug="$2"
+date=$(date +%F)
+repo_root="$(cd "$(dirname "$0")/.." && pwd)"
+
+note_path="$repo_root/topics/$topic/$slug.md"
+log_path="$repo_root/log/$date-$topic-$slug.md"
+
+mkdir -p "$repo_root/topics/$topic"
+mkdir -p "$repo_root/log"
+
+if [ -e "$note_path" ]; then
+  echo "exists: $note_path" >&2
+  exit 1
+fi
+
+title=$(echo "$slug" | tr '-' ' ')
+
+cat > "$note_path" <<EOF
+---
+topic: $topic
+status: wip
+---
+
+# $title
+
+EOF
+
+cat > "$log_path" <<EOF
+$date — started $topic/$slug
+
+[topics/$topic/$slug.md](../topics/$topic/$slug.md)
+EOF
+
+echo "created: $note_path"
+echo "logged:  $log_path"
