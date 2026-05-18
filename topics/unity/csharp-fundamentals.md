@@ -1,9 +1,9 @@
 ---
-topic: csharp
+topic: unity
 status: wip
 ---
 
-# start here
+# csharp fundamentals
 
 C-family syntax. Curly braces, semicolons, `if/else/switch`, `for/while`. Familiar if you know C/Java/JS.
 
