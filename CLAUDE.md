@@ -14,11 +14,11 @@ Mohammadjavad Moshiri's personal learning archive. Single repo replacing a dozen
 ## Repo structure
 
 ```
-topics/    knowledge by subject. one folder per topic, one file per concept
-log/       chronological learning events. YYYY-MM-DD-slug.md
-builds/    one-pager per notable project
-inbox/     raw notes not yet filed
-bin/       new-note, index
+topics/live/      active subjects. one folder per topic, one file per concept
+topics/archive/   parked subjects, same layout
+log/              chronological learning events. YYYY-MM-DD-slug.md
+builds/           one-pager per notable project
+bin/              new-note, index
 ```
 
 Three top-level content dirs: `topics/`, `log/`, `builds/`. No `journal/`, no `notes/`, no `Timeline.md`. The log itself IS the timeline; the filename is the date.
@@ -37,11 +37,11 @@ Three top-level content dirs: `topics/`, `log/`, `builds/`. No `journal/`, no `n
 - **`_.md` is the topic landing page** when a folder needs one. Sorts first alphabetically. Hand-written. Covers what's in the folder, what's missing, where to start.
 - **Single-file topics:** put the content in `_.md`. No need for a separate file.
 - **Log entries are verbatim.** MJ's own daily writing isn't rewritten.
-- **Scratch goes in `inbox/`.** Promote to a topic once the shape is clear (3+ related notes is the rule of thumb).
+- **`live/` vs `archive/`.** New and active topics live under `topics/live/`. Cold topics move to `topics/archive/` (same layout). New notes always land in `live/`.
 
 ## Workflow — adding a new note
 
-1. Pick a topic folder under `topics/`. If none fits, create it: `mkdir topics/<new-topic>`.
+1. Pick a topic folder under `topics/live/`. If none fits, create it: `mkdir topics/live/<new-topic>`.
 2. Run `bin/new-note <topic> <slug>` to scaffold the file with frontmatter and drop a log entry.
 3. Write the note in mj-rewrite voice (see below).
 4. If the topic folder is new and worth introducing, write a short `_.md` landing page.
@@ -50,10 +50,10 @@ Three top-level content dirs: `topics/`, `log/`, `builds/`. No `journal/`, no `n
 
 ## Workflow — coming back to a topic after months
 
-- `cat topics/<topic>/_.md` — landing page (if one exists)
-- `ls topics/<topic>/` — every concept covered
+- `cat topics/live/<topic>/_.md` — landing page (if one exists)
+- `ls topics/live/<topic>/` — every concept covered
 - `grep -lr "status: wip" topics/<topic>/` — anything left half-done
-- `git log --oneline -- topics/<topic>/` — chronology of changes
+- `git log --oneline -- topics/*/<topic>/` — chronology of changes
 
 ## Voice
 
