@@ -32,6 +32,16 @@ Don't average response times. Averages hide the tail. Use percentiles: p50 is th
 >
 > As a general principle, when investigating an incident, you should be suspicious of simplistic answers. "Bob should have been more careful when deploying that change" is not productive, but neither is "We must rewrite the backend in Haskell." Instead, management should learn the details of how the sociotechnical system works from the point of view of the people who work with it every day, and take steps to improve it based on this feedback.
 
+### Principles for scalability
+
+> There is no such thing as a generic, one-size-fits-all scalable architecture (informally known as magic scaling sauce). For example, a system designed to handle 100,000 requests per second, each 1 kB in size, looks very different from a system designed for 3 requests per minute, each 2 GB in size—even though the two systems have the same data throughput (100 MB/second).
+>
+> An architecture that is appropriate for one level of load is unlikely to cope with 10 times that load. If you are working on a fast-growing service, you will probably need to rethink your architecture on every order of magnitude load increase. Since the needs of the application are likely to evolve, it is usually not worth planning future scaling needs more than one order of magnitude in advance.
+>
+> A good general principle for scalability is to break a system into smaller components that can operate largely independently from one another. This is the underlying principle behind microservices, sharding, stream processing, and shared-nothing architectures. The challenge lies in knowing where to draw the line between things that should be together and things that should be apart.
+>
+> Another good principle is not to make things more complicated than necessary. If a single-machine database will do the job, it's probably preferable to a complicated distributed setup. Autoscaling systems are cool, but if your load is fairly predictable, a manually scaled system may have fewer operational surprises. A system with 5 services is simpler than one with 50. Good architectures usually involve a pragmatic mixture of approaches.
+
 ### Complexity: essential vs accidental
 
 > One attempt at reasoning about complexity breaks it into two categories: essential and accidental. The idea is that essential complexity is inherent in the problem domain of the application, while accidental complexity arises only because of limitations of our tooling. Unfortunately, this distinction is also flawed, because boundaries between the essential and the accidental shift as our tooling evolves.
