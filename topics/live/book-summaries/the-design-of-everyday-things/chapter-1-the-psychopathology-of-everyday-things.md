@@ -4,7 +4,7 @@ status: wip
 tags: [design, ux]
 ---
 
-# The Design of Everyday Things
+# Chapter 1: The Psychopathology of Everyday Things
 
 Don Norman. Good design isn't taste. It's making objects that tell you how to use them, so the failure is the design's fault, not users'.
 
