@@ -10,75 +10,78 @@ The vocabulary and design principles the rest of the book builds on. Izar Tarand
 
 ## the risk vocabulary
 
-- **weakness**: a flaw in design or implementation that could be abused.
-- **vulnerability**: a weakness that's actually reachable and abusable.
-- **exploitability**: how hard it is to turn that vulnerability into an attack.
-- **zero-day**: a vulnerability with no fix available yet, known to attackers before defenders.
-- **actor**: whoever is acting on the system, benign or hostile.
-- **threat**: the potential for harm. **threat event**: an attempt to realize it.
-- **severity**: how bad the defect is on its own.
-- **impact** / **loss**: what it costs you if the threat lands.
-- **risk**: the thing you actually manage. Not severity.
+The terms form a chain, not a pile:
+
+- **weakness**: a defect in design or implementation. May or may not be reachable.
+- **vulnerability**: a weakness an attacker can actually reach and abuse.
+- **exploitability**: how easily that abuse can happen, and with how much access.
+- **zero-day**: a vulnerability attackers know about before a fix exists.
+- **actor**: whoever acts on the system, benign or hostile.
+- **threat**: the potential for a vulnerability to be exploited and cause harm.
+- **threat event**: an actor's attempt to realize that potential.
+- **impact / loss**: what the event costs you: money, data, reputation, function.
+- **severity**: how bad the defect itself is, independent of context.
+- **risk**: impact × likelihood the threat event happens. The only one of these you manage.
+
+So: a weakness becomes a vulnerability when it's reachable, a vulnerability plus an actor with intent is a threat, and a threat weighted by likelihood and loss is risk.
 
 ## CVSS scores severity, not risk
 
-CVSS tells you the likelihood an attacker *succeeds* once they try, and how much damage they can do. It says nothing about *when or whether* anyone attempts the exploit, what the impacted system is worth, or what the fix costs.
+CVSS tells you two things: the likelihood an attacker succeeds *once they try*, and how much damage they can do. It cannot tell you whether anyone will try, what the impacted system is worth, or what the fix costs. Those three (likelihood an attack gets initiated, value of the system or function, cost to mitigate) are what drive the risk calculation. Raw severity communicates a defect well and manages risk badly.
 
-Risk is driven by three things CVSS ignores:
+Two methods go further:
 
-1. likelihood an attack even gets started,
-2. value of the system or function under attack,
-3. cost to mitigate.
-
-Raw severity describes a defect well and manages risk badly. Two methods go further: **DREAD** (a rough scoring mnemonic) and **FAIR** (Factor Analysis of Information Risk), which models financial impact properly. FAIR is accurate but heavy. It needs computational and financial-modeling skill, not the security expertise your SMEs have. Don't run it live in a review session. Use a tool or a specialist if you adopt it.
+- **DREAD**: score Damage, Reproducibility, Exploitability, Affected users, Discoverability. Quick, but the scores are subjective.
+- **FAIR** (Factor Analysis of Information Risk): models financial impact properly. Accurate but heavy. The calculations and simulations need computational and financial-modeling skill, which is not what security SMEs have: their expertise is finding weaknesses and threats, not valuing losses. Don't run FAIR live in a review session. Buy a tool or hire the skill if you adopt it.
 
 ## the properties you're protecting
 
-**CIA**: confidentiality, integrity, availability.
+**CIA**: confidentiality, integrity, availability. Plus two distinctions worth keeping:
 
-- **confidentiality vs privacy** aren't the same. Confidentiality is controlled access to private info you've shared. Privacy is the right to *not have that info exposed* to unauthorized third parties. People say confidentiality when they mean privacy. Confidentiality is a prerequisite for privacy, not a synonym.
-- **integrity**: the data or transaction hasn't been tampered with.
-- **availability**: it's there when you need it.
-- **safety**: freedom from unacceptable risk of physical injury or health damage, direct or through property or the environment. Matters once software touches the physical world.
+- **confidentiality**: controlled access to private info that's been shared.
+- **privacy**: the right to *not have that info exposed* to unauthorized third parties. Not the same thing, though people use the terms interchangeably and usually mean privacy when they say confidentiality. Confidentiality is a prerequisite for privacy.
+- **integrity**: data and transactions haven't been tampered with.
+- **availability**: the system is there when needed.
+- **safety**: "freedom from unacceptable risk of physical injury or of damage to the health of people", directly or indirectly through damage to property or environment. Enters the model once software touches the physical world.
 
 ## identity and access
 
-Three steps, in order: **identification** (who you claim to be), **authentication** (proving it), **authorization** (what you're then allowed to do).
+Three steps, in order: **identification** (who you claim to be), **authentication** (proving the claim), **authorization** (what the proven identity may do).
 
-Access-control models:
+Four access-control models:
 
-- **MAC** (mandatory): a central policy decides, users can't override.
+- **MAC** (mandatory): a central policy decides; owners can't override.
 - **DAC** (discretionary): the resource owner grants access.
 - **RBAC** (role-based): permissions attach to roles, users get roles.
 - **capability-based**: holding an unforgeable token *is* the permission.
 
-Backed by **logging** and **auditing** so access can be reviewed after the fact.
+**Logging** and **auditing** back all four: access has to be reviewable after the fact.
 
 ## design principles
 
-- **zero trust**: no implicit trust from network location. Verify every request.
-- **least privilege**: give each component the minimum access it needs, nothing spare.
+- **zero trust**: verify every request; nothing earns trust from where it sits.
+- **least privilege**: each component gets the minimum access it needs.
 - **defense in depth**: layered controls, so one failure isn't a breach.
+- **separation of privilege**: no single condition should grant access on its own.
 - **keep it simple**: complexity hides flaws.
-- **no secret sauce**: don't rely on obscurity. The design should hold even if every detail is public.
-- **separation of privilege**: require more than one condition to grant access.
-- **psychological acceptability**: humans are the weakest link. Security users find annoying gets routed around, so usability is a security constraint.
+- **no secret sauce**: no security through obscurity. The design must survive every implementation detail being known and published.
+- **psychological acceptability**: humans are the weakest link. Users frustrated by strong security will route around it, so usability is a design constraint, not polish.
 - **fail secure**: on failure, deny by default.
-- **build in, not bolt on**: security designed from the start, not patched over a finished system.
+- **build in, not bolt on**: security designed in from the start, not patched onto a finished system.
 
 ## logging: what to capture, what to never log
 
-A security analyst reviewing an event needs to answer three questions:
+A security analyst needs three answers from your logs:
 
-- **who** performed the action?
+- **who** performed the action that produced the event?
 - **when** did it happen?
-- **what** data or functionality did they touch?
+- **what** functionality or data did the process or user touch?
 
-**Nonrepudiation** (close to integrity): a tamper-evident record of who did what, so an actor can't later deny an action.
+**Nonrepudiation** (closely tied to integrity): a record of who did what, where each entry keeps its own integrity, so no actor can deny having performed an action.
 
-Knowing what *not* to log matters just as much. Never write to logs:
+Never log:
 
 - **PII** in plain text.
 - **sensitive content** passed in API or function calls.
-- **clear-text** versions of anything encrypted.
-- **cryptographic secrets**: passwords, keys.
+- **clear-text versions** of encrypted content.
+- **cryptographic secrets**: passwords, decryption keys.
