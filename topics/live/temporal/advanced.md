@@ -60,3 +60,24 @@ Durable Timers are tracked by the Cluster, not the Worker. If a Workflow crashes
 ### Event History limits
 
 If a Workflow Execution's Event History goes past 50K events (51,200 exactly), the execution may get terminated by the server. This is the real reason Continue-As-New exists: any Workflow that loops or runs long enough to approach that ceiling needs to periodically restart itself with a clean history instead of letting it grow unbounded.
+
+### Sticky Execution
+
+By default a Worker doesn't replay a Workflow's whole Event History on every Workflow Task. After the first task, the Worker caches the Workflow's state in memory, and the Cluster starts scheduling that execution's tasks on a **Sticky Queue**: a task queue private to that one Worker process. Subsequent tasks only carry the new events, so the Worker just applies the delta to its cached state. That's Sticky Execution, and it's on by default because full replays are expensive.
+
+The fallback is what makes it safe. If the sticky Worker doesn't pick up a task within a timeout, the Cluster puts the task back on the original (shared) task queue, and whichever Worker grabs it does a full history replay to rebuild the state from scratch. So a Worker dying costs you one replay, not correctness.
+
+### Determinism: what breaks it
+
+Replay only works if the Workflow code takes the same path through the same history every time. The usual ways to break that:
+
+- **Random numbers.** A different value on replay means a different branch.
+- **Accessing or mutating external systems or state.** Network calls, DB reads, filesystem, environment variables, shared globals. Anything outside the history can differ between the original run and the replay. This is what Activities are for.
+- **System time.** `new Date()` or `Date.now()` at replay time isn't the time of the original run.
+- **Iterating over data structures with unknown ordering.** Iterate over a map or set with no ordering guarantee and the replay might visit entries in a different order than the original run.
+
+The TypeScript SDK softens the first and third: Workflow code runs in a sandbox where `Math.random()` and `Date` are patched with deterministic, replay-safe versions. The other two are still on you.
+
+### Testing: @temporalio/testing
+
+The SDK ships a testing package, `@temporalio/testing`. The main tool is `TestWorkflowEnvironment`. Its time-skipping mode runs Workflows against a test server that fast-forwards time whenever the Workflow is just waiting, so a Workflow with a 30-day sleep in it finishes in milliseconds instead of a month. There's also a mock environment for unit-testing Activities in isolation, without a Worker or server.
