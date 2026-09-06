@@ -8,15 +8,15 @@ tags: [systems, data, sharding, distributed-systems]
 
 ### Why shard
 
-Shard when one machine can't hold the data or take the write throughput: split the dataset and give each node a subset. Same idea under many names: partition, tablet (Bigtable), region (HBase), vnode (Cassandra). Sharding sits on top of replication, so each record lives in exactly one shard and each shard is copied across several nodes. It complicates routing, rebalancing, and indexes, so don't shard before one node stops being enough. The other reason to shard is multitenancy: one shard per tenant gives you isolation, per-tenant deletes (nice for GDPR), and per-tenant cost accounting.
+Shard when one machine can't hold the data or take the write throughput: split the dataset and give each node a subset. Same idea under many names: partition, tablet (Bigtable), region (HBase), vnode (Cassandra). Sharding sits on top of replication. Each record lives in exactly one shard; each shard is copied across several nodes. It complicates routing, rebalancing, and indexes. The other reason to shard is multitenancy: one shard per tenant gives you isolation, per-tenant deletes (nice for GDPR), and per-tenant cost accounting.
 
 ### Skew and hot spots
 
-The whole game is spreading data and load evenly. An unfair split is skew, and a shard taking disproportionate load is a hot spot. Worst case, every write lands on one shard and sharding bought you nothing.
+An unfair split is skew. A shard taking disproportionate load is a hot spot. Worst case, every write lands on one shard and sharding bought you nothing.
 
 ### Key-range sharding
 
-Each shard owns a contiguous sorted range of keys, like encyclopedia volumes. You always know which shard holds a key, and range scans are cheap. HBase and MongoDB in range mode work this way. The weakness is the access pattern: with timestamp keys the newest range takes every write. Prefix the key with something that spreads writes, sensor name before timestamp, and pay one scan per prefix. Rebalancing is dynamic here: split shards as they grow, merge them as they shrink, and pre-split a fresh database so it doesn't start life on a single node.
+Each shard owns a contiguous sorted range of keys. You always know which shard holds a key, and range scans are cheap. HBase and MongoDB in range mode work this way. The weakness is the access pattern: with timestamp keys the newest range takes every write. Prefix the key with something that spreads writes, sensor name before timestamp, and pay one scan per prefix. Rebalancing is dynamic here: split shards as they grow, merge them as they shrink, and pre-split a fresh database so it doesn't start life on a single node.
 
 ### Hash sharding
 
@@ -32,7 +32,7 @@ Never hash mod N. One new node reshuffles nearly every key.
 
 ### Hot keys
 
-Hashing does nothing for a single hot key, a celebrity user or a viral post, since all its writes hash to the same shard anyway. The known relief is appending a random two-digit suffix so writes spread over 100 keys on different shards; reads then fan out over all 100 and merge. Worth it only for keys you already know are hot, and something has to track which keys got the treatment.
+Hashing does nothing for a single hot key, a celebrity user or a viral post, since all its writes hash to the same shard anyway. Fix: append a random two-digit suffix so writes spread over 100 keys on different shards; reads then fan out over all 100 and merge. Worth it only for keys you already know are hot, and something has to track which keys got the treatment.
 
 ### Rebalancing operations
 
@@ -48,6 +48,6 @@ The hard part. A local index (document-partitioned) covers only the records on i
 
 ### General notes
 
-Every scheme juggles three things: even load, cheap rebalancing, and key order for range scans. Nothing gets all three. Skew is the recurring villain, showing up in the key distribution, the access pattern, or one hot key, and each form needs its own fix.
+Every scheme juggles three things: even load, cheap rebalancing, and key order for range scans. Nothing gets all three.
 
 back to [[replication]] for Ch 6.

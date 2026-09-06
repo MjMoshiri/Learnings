@@ -8,7 +8,7 @@ tags: [systems, data, storage-engines, indexes]
 
 ### Two kinds of storage engines
 
-OLTP engines serve transactional workloads, lots of small reads and writes. OLAP engines serve analytics, big scans over many rows. The internals differ because the workloads differ. OLTP itself splits into two schools.
+OLTP engines serve transactional workloads, lots of small reads and writes. OLAP engines serve analytics, big scans over many rows.
 
 ### Log-structured vs update-in-place
 
@@ -61,9 +61,5 @@ Inverted file index. Partition the vector space into clusters with centroids. At
 ### HNSW
 
 Hierarchical Navigable Small World, a graph-based approximate nearest-neighbor index. It's a multi-layer graph: sparse long-range links on top, dense local links at the bottom. Search walks greedily from the top layer down toward the nearest neighbor. Fast approximate search for vector and semantic similarity.
-
-### General notes
-
-Knowing the storage internals tells you which DB fits your workload and what the tuning knobs actually do. OLTP picks between log-structured and update-in-place. OLAP goes column-oriented with compression and either vectorized or compiled execution. Specialized indexes (multidimensional, inverted, vector) handle the queries that a plain ordered index can't.
 
 back to [[data-models-and-query-languages]] for Ch 3.

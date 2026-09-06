@@ -16,9 +16,9 @@ The awkward translation layer between objects in your code and rows in a relatio
 
 ### Denormalization
 
-Denormalize stable facts, not fast-changing ones. If something rarely changes, copying it around is cheap. If it churns, every copy is another write you have to keep in sync. Duplicate the idea, not the data that moves.
+Denormalize stable facts, not fast-changing ones. If something rarely changes, copying it around is cheap. If it churns, every copy is another write you have to keep in sync.
 
-> the most scalable approach may involve denormalizing some things and leaving others normalized. You will have to carefully consider how often the information changes and the cost of reads and writes (which might be dominated by outliers, such as users with many follows/followers in the case of a typical social network). Normalization and denormalization are not inherently good or bad—they simply represent trade-offs in terms of performance of reads and writes and implementation effort.
+The scalable approach is usually mixed. How often the data changes, and the cost of the outliers (users with millions of followers), decide which side each fact lives on.
 
 ### Star and snowflake schemas
 
@@ -28,7 +28,7 @@ A fact table in the middle holds the events (sales, clicks, whatever), with dime
 
 Schema-on-write is relational. The DB enforces structure when data goes in, like static typing. Schema-on-read is the document world. There's no enforcement on write; structure is assumed when you read, like dynamic typing.
 
-Say you want to split `name` into `first_name` and `last_name`. Schema-on-read: start writing new documents in the new shape and handle the old shape in code at read time. Schema-on-write: run a migration, `ALTER TABLE`, backfill. One defers the work to read code, the other pays it up front.
+Split `name` into `first_name` and `last_name`. Schema-on-read: start writing new documents in the new shape and handle the old shape in code at read time. Schema-on-write: run a migration, `ALTER TABLE`, backfill. One defers the work to read code, the other pays it up front.
 
 ### Graph queries: Cypher vs SQL
 
@@ -41,18 +41,20 @@ MATCH
 RETURN person.name
 ```
 
-The same query in SQL needs recursive CTEs to walk the variable-length `WITHIN` chains, and it runs several dozen lines. The graph model fits this; the relational one fights it.
+The same query in SQL needs recursive CTEs to walk the variable-length `WITHIN` chains, and it's several dozen lines. The graph model fits this; the relational one fights it.
 
 Triple stores store everything as (subject, predicate, object), e.g. (Jim, likes, bananas). SPARQL is their query language.
 
 ### Event sourcing and CQRS
 
-> The idea of using events as the source of truth and expressing every state change as an event is known as event sourcing. The principle of maintaining separate read-optimized representations and deriving them from the write-optimized representation is called command query responsibility segregation (CQRS)
+Event sourcing: events are the source of truth. Every state change is an event.
 
-### General Notes
+CQRS: keep a separate read-optimized view and derive it from the write-optimized one.
 
-Relational still dominates warehousing and analytics. The document model fits self-contained JSON where cross-document relationships are rare. Graph models fit the opposite case: everything related to everything, multi-hop queries. Dataframes bridge databases and ML's multidimensional arrays.
+### General notes
 
-Every model can emulate the others, but awkwardly, like recursive SQL faking graph traversal. The lines are blurring anyway: relational DBs now have JSON columns, document DBs now do joins. And nonrelational models usually don't enforce schema, but the structure assumption doesn't vanish. It just goes implicit (on read) instead of explicit (on write).
+Relational still dominates warehousing and analytics. The document model fits self-contained JSON where cross-document relationships are rare. Graph models fit the opposite: everything related to everything, multi-hop queries. Dataframes bridge databases and ML's multidimensional arrays.
+
+Every model can emulate the others, but awkwardly. The lines are blurring: relational DBs now have JSON columns, document DBs now do joins. Nonrelational models usually don't enforce schema. The structure assumption doesn't vanish. It just goes implicit on read instead of explicit on write.
 
 back to [[non-functional-requirements]] for Ch 2.

@@ -8,7 +8,7 @@ tags: [systems, data, replication, distributed-systems]
 
 ### Why replicate at all
 
-Keep copies of the same data on multiple machines. You get lower latency (data near users), availability (survive a node or datacenter dying), read throughput (more machines serving reads), and offline operation (device keeps a local copy). None of this is hard for static data. All the difficulty is in handling changes to replicated data. Three families of algorithms: single-leader, multi-leader, leaderless.
+Keep copies of the same data on multiple machines. You get lower latency (data near users), availability (survive a node or datacenter dying), read throughput (more machines serving reads), and offline operation (device keeps a local copy). None of this is hard for static data. All the difficulty is in handling changes to replicated data.
 
 ### Single-leader replication
 
@@ -18,7 +18,7 @@ Sync vs async is the core knob:
 
 - Synchronous: leader waits for a follower to confirm before acking the client. The follower has the write, but one slow or dead follower blocks all writes.
 - Asynchronous: leader acks immediately. Fast, but if the leader dies before followers catch up, acked writes are gone.
-- Semi-synchronous: exactly one follower is sync, the rest async. You always have an up-to-date copy on two nodes without waiting on everyone. This is the usual compromise.
+- Semi-synchronous: exactly one follower is sync, the rest async. You always have an up-to-date copy on two nodes without waiting on everyone. Usual compromise.
 
 Fully sync across all followers is impractical. Fully async is what most setups actually run, trading durability for latency.
 
@@ -50,11 +50,11 @@ With async followers a read can hit a replica that hasn't caught up. Eventually 
 - Monotonic reads: user reads from a fresh replica, then a staler one, and sees data move backward in time. Fix: pin each user to one replica (hash of user id).
 - Consistent prefix reads: an observer sees an answer before the question it responds to, because causally related writes landed on different shards with different lag. Guarantee that writes are read in the order they happened. Easy in a single shard, hard across shards.
 
-These three are the vocabulary for reasoning about what "eventual consistency" actually costs. If your app can't tolerate them, you need stronger guarantees (transactions, or the consensus material later in the book), not hand-tuned workarounds.
+If the app can't live with those, you need stronger guarantees (transactions, or consensus), not hand-tuned workarounds.
 
 ### Multi-leader replication
 
-More than one node accepts writes; each leader is also a follower of the others. Rarely worth it inside one datacenter. The real use cases:
+More than one node accepts writes; each leader is also a follower of the others. Rarely worth it inside one datacenter.
 
 - Multi-datacenter: one leader per DC. Writes ack locally (lower latency), each DC survives the other's outage, and inter-DC replication is async in the background.
 - Offline clients: your phone's calendar is a leader with a very long replication lag.
@@ -62,13 +62,13 @@ More than one node accepts writes; each leader is also a follower of the others.
 
 The price is write conflicts: two leaders accept concurrent writes to the same record and only notice when they replicate. Options:
 
-- Avoid conflicts: route all writes for a given record to the same leader. Solves most of the problem and is the usual recommendation.
+- Avoid conflicts: route all writes for a given record to the same leader. Solves most of the problem. Usual recommendation.
 - Last write wins: keep the write with the biggest timestamp, drop the rest. Simple, silently loses data.
 - Keep both versions and let the application or user merge.
 - CRDTs: data structures that merge concurrent updates automatically with guaranteed convergence.
 - Operational transformation: the collaborative-text-editing algorithm family (Google Docs).
 
-Topology matters too. Circular and star topologies have single points of failure in the forwarding path. All-to-all handles failures better, but messages can arrive out of causal order, which needs version vectors to fix.
+Circular and star topologies have single points of failure in the forwarding path. All-to-all handles failures better, but messages can arrive out of causal order, which needs version vectors to fix.
 
 ### Leaderless replication
 
@@ -91,6 +91,6 @@ Mechanics: each key carries a version number per replica, and the set of them is
 
 ### General notes
 
-Replication theory is 1970s old, but the trade-offs haven't moved because networks still partition and nodes still die. What changed is that every product is now distributed, so everyone hits these problems. Most decisions here reduce to two questions: who can accept a write (one node, several, any), and what you're willing to lose or expose when replication is behind (durability on failover, staleness on reads, conflicts on merge). Pick the anomaly you can live with. There's no option with none.
+Most decisions here reduce to two questions: who can accept a write (one node, several, any), and what you're willing to lose or expose when replication is behind (durability on failover, staleness on reads, conflicts on merge). Pick the anomaly you can live with. There's no option with none.
 
 back to [[encoding-and-evolution]] for Ch 5.

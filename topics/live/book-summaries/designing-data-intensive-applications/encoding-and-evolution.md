@@ -35,14 +35,14 @@ message Person {
 }
 ```
 
-The `= 1`, `= 2`, `= 3` are tags. On the wire each field is tag + type + value; the name never appears. That's where the compactness comes from, and it sets the evolution rules:
+The `= 1`, `= 2`, `= 3` are tags. On the wire each field is tag + type + value; the name never appears. That's where the compactness comes from.
 
 - Rename a field freely. The tag is the identity, the name is for humans.
 - Add a field with a new tag. Old code skips the unknown tag (forward); new code reading old data uses a default (backward).
 - Never reuse or change a tag number. That's the one move that breaks everything.
 - A new field can't be required, since old data never carries it. proto3 dropped `required` for this.
 
-`repeated` means zero or more, i.e. a list. Tags 1 to 15 encode in one byte, so give the low numbers to the fields you touch most.
+`repeated` is a list. Tags 1 to 15 encode in one byte, so give the low numbers to the fields you touch most.
 
 ### Avro
 
@@ -59,7 +59,7 @@ They needn't match versions. At decode time Avro lines them up by field name:
 - Writer's only: ignore it.
 - Reader's only: fill the declared default.
 
-Order doesn't matter since matching is by name. That's how Avro gets both directions without tags.
+Order doesn't matter since matching is by name.
 
 The catch: the reader needs the writer's schema, and where it comes from depends on the setting:
 
@@ -67,24 +67,19 @@ The catch: the reader needs the writer's schema, and where it comes from depends
 - A database written over time: tag each record with a schema version, keep a registry.
 - Records over a network: negotiate the version on the handshake.
 
-Why give up tags? Dynamically generated schemas. Dump a table to Avro and the schema falls out of the columns. Rename a column, regenerate, done. Protobuf would have you assigning and guarding tag numbers by hand forever. Avro fits the case where nobody writes the schema by hand.
+Dynamically generated schemas are why you give up tags. Dump a table to Avro and the schema falls out of the columns. Rename a column, regenerate, done. Protobuf would have you assigning and guarding tag numbers by hand forever. Avro fits the case where nobody writes the schema by hand.
 
 ### Why schema-based binary encodings earn their keep
 
-> binary encodings based on schemas are also a viable option. They can be much more compact than the various "binary JSON" variants, since they can omit field names from the encoded data.
+They omit field names, so they're more compact than "binary JSON" variants.
 
-What you get:
-
-- Compact, because field names don't ride along.
 - The schema is documentation that can't drift, since decoding needs it current.
 - A schema registry checks a change for forward/backward compatibility before it ships.
 - Code generation gives compile-time type checking in statically typed languages.
 
-Net: schema evolution buys the flexibility of schema-on-read JSON plus stronger guarantees and better tooling. Keep the number of formats small so ops stay simple.
+Keep the number of formats small so ops stay simple.
 
 ### Modes of dataflow
-
-Encoding matters because data crosses between processes, one side encoding while the other decodes. Three modes:
 
 - Through a database: writer encodes, a later reader decodes, maybe with different code.
 - Through service calls (RPC, REST): client encodes a request, server decodes and encodes a response, client decodes it.
@@ -92,24 +87,24 @@ Encoding matters because data crosses between processes, one side encoding while
 
 ### RPC, REST, and location transparency
 
-RPC dresses a network call as a local function call. Location transparency is the promise: the caller doesn't care which machine runs the code. The abstraction leaks, because a network call isn't a local one. It can be slow, time out, or vanish with no reply, and a retry might run the work twice unless the call is idempotent. REST is the looser, more explicit style over HTTP. RPC frameworks use the schema formats above to encode request and response.
+RPC dresses a network call as a local function call. Location transparency is the promise: the caller doesn't care which machine runs the code. A network call isn't a local one. It can be slow, time out, or vanish with no reply, and a retry might run the work twice unless the call is idempotent. REST is the looser, more explicit style over HTTP. RPC frameworks use the schema formats above to encode request and response.
 
 ### Service discovery and service meshes
 
-Once many services call each other, two problems show up. Service discovery turns a service name into a current network address, since instances come and go. A service mesh pushes cross-cutting concerns (routing, retries, TLS, timeouts, metrics) into a sidecar proxy beside each service, so the calling code stays plain.
+Service discovery turns a service name into a current network address, since instances come and go. A service mesh pushes routing, retries, TLS, timeouts, and metrics into a sidecar proxy beside each service, so the calling code stays plain.
 
 ### Durable execution
 
-Workflow engines persist a workflow's progress so it survives a crash and resumes where it stopped instead of restarting. Temporal calls a task an activity; others call them durable functions. Durable execution is now a common way to get transactionality across services, where one logical operation spans several services and has to either finish or unwind cleanly.
+Workflow engines persist a workflow's progress so it survives a crash and resumes where it stopped. Temporal calls a task an activity; others call them durable functions. One way to get transactionality across services: one logical operation spans several services and has to either finish or unwind.
 
 ### Event-driven architecture and the actor model
 
 Event-driven systems send messages instead of calling each other directly. A sender publishes an encoded message, a broker holds it, a recipient decodes and handles it. Sender and recipient are decoupled in time and identity; neither blocks on the other.
 
-The actor model is one way to structure this. An actor is an isolated unit with private state that talks only by async messages and handles one at a time, so no shared-memory locking inside it. Distributed actor frameworks (Akka, Erlang/OTP, Orleans) spread actors across nodes, so message passing becomes encoded network traffic. The same compatibility rules apply, since a message sent by one version gets read by another.
+The actor model is one way to structure this. An actor is an isolated unit with private state that talks only by async messages and handles one at a time, so no shared-memory locking inside it. Distributed actor frameworks (Akka, Erlang/OTP, Orleans) spread actors across nodes, so message passing becomes encoded network traffic. Same compatibility rules: a message sent by one version gets read by another.
 
 ### General notes
 
-The encoding choice isn't a detail. It decides whether you can run rolling upgrades, which decides whether you ship small and often instead of rare and risky. Get backward and forward compatibility right and different code versions coexist safely, whichever way the data flows. Language-specific encodings trap you in one language and usually break compatibility. Textual formats (JSON, XML, CSV) are portable but loose about types. Binary schema formats (Protocol Buffers, Avro) are compact with clear compatibility rules, at the cost of not being human-readable until decoded.
+The encoding choice decides whether you can run rolling upgrades, which decides whether you ship small and often. Language-specific encodings trap you in one language and usually break compatibility.
 
 back to [[storage-and-retrieval]] for Ch 4.
