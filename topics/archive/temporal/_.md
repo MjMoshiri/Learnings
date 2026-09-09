@@ -1,6 +1,6 @@
 ---
 topic: temporal
-status: wip
+status: done
 tags: [distributed-systems, workflow-orchestration]
 ---
 

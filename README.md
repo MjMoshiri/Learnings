@@ -20,7 +20,7 @@ That's it. No category layer. No journal vs Timeline split. Filenames sort to gi
 
 - New concept worth keeping: `bin/new-note <topic> <concept-slug>`. Scaffolds the topic file under `topics/live/` with frontmatter and drops a log entry.
 - Topic doesn't exist yet: `mkdir topics/live/<topic>` then run `new-note`. No category to pick.
-- Topic gone cold: move its folder under `topics/archive/`.
+- Topic done or paused: move its folder under `topics/archive/`.
 - Every note carries minimal frontmatter: `topic`, `status` (`done` / `wip` / `ongoing`).
 - `bin/index` regenerates `topics/_.md` (the master index) from the filesystem.
 - Each topic folder may have its own `_.md` landing page covering what's in there, what's next, and where to start.

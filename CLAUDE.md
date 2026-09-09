@@ -37,7 +37,7 @@ Three top-level content dirs: `topics/`, `log/`, `builds/`. No `journal/`, no `n
 - **`_.md` is the topic landing page** when a folder needs one. Sorts first alphabetically. Hand-written. Covers what's in the folder, what's missing, where to start.
 - **Single-file topics:** put the content in `_.md`. No need for a separate file.
 - **Log entries are verbatim.** MJ's own daily writing isn't rewritten.
-- **`live/` vs `archive/`.** New and active topics live under `topics/live/`. Cold topics move to `topics/archive/` (same layout). New notes always land in `live/`.
+- **`live/` vs `archive/`.** New and active topics live under `topics/live/`. Done or paused topics move to `topics/archive/` (same layout). New notes always land in `live/`.
 
 ## Workflow — adding a new note
 
