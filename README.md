@@ -9,16 +9,15 @@ Replaces a scattered set of small repos that existed before. Those are archived;
 ```
 topics/live/      active subjects. one folder per topic, one file per concept
 topics/archive/   parked subjects, same layout
-log/              chronological learning events. YYYY-MM-DD-slug.md
 builds/           one-pager per notable project (what it was, what I learned)
 bin/              scripts (new-note, index)
 ```
 
-That's it. No category layer. No journal vs Timeline split. Filenames sort to give chronology; folder structure gives subject.
+That's it. No category layer. No journal vs Timeline split. Folder structure gives subject. git history is the chronology.
 
 ## How I use it
 
-- New concept worth keeping: `bin/new-note <topic> <concept-slug>`. Scaffolds the topic file under `topics/live/` with frontmatter and drops a log entry.
+- New concept worth keeping: `bin/new-note <topic> <concept-slug>`. Scaffolds the topic file under `topics/live/` with frontmatter.
 - Topic doesn't exist yet: `mkdir topics/live/<topic>` then run `new-note`. No category to pick.
 - Topic done or paused: move its folder under `topics/archive/`.
 - Every note carries minimal frontmatter: `topic`, `status` (`done` / `wip` / `ongoing`).
@@ -30,7 +29,6 @@ That's it. No category layer. No journal vs Timeline split. Filenames sort to gi
 - "What did I write about X?" → `ls topics/live/<topic>/`. Filenames are concepts.
 - "What was unfinished?" → `grep -lr "status: wip" topics/`.
 - "When did I touch this?" → `git log -- topics/*/<topic>/`.
-- "What did I learn last month?" → `ls log/` and read the dates.
 
 ## Writing rules
 

@@ -16,12 +16,11 @@ Mohammadjavad Moshiri's personal learning archive. Single repo replacing a dozen
 ```
 topics/live/      active subjects. one folder per topic, one file per concept
 topics/archive/   parked subjects, same layout
-log/              chronological learning events. YYYY-MM-DD-slug.md
 builds/           one-pager per notable project
 bin/              new-note, index
 ```
 
-Three top-level content dirs: `topics/`, `log/`, `builds/`. No `journal/`, no `notes/`, no `Timeline.md`. The log itself IS the timeline; the filename is the date.
+Two top-level content dirs: `topics/` and `builds/`. No `journal/`, no `notes/`, no `Timeline.md`. git is the chronology.
 
 ## Conventions
 
@@ -36,17 +35,16 @@ Three top-level content dirs: `topics/`, `log/`, `builds/`. No `journal/`, no `n
   ```
 - **`_.md` is the topic landing page** when a folder needs one. Sorts first alphabetically. Hand-written. Covers what's in the folder, what's missing, where to start.
 - **Single-file topics:** put the content in `_.md`. No need for a separate file.
-- **Log entries are verbatim.** MJ's own daily writing isn't rewritten.
 - **`live/` vs `archive/`.** New and active topics live under `topics/live/`. Done or paused topics move to `topics/archive/` (same layout). New notes always land in `live/`.
 
 ## Workflow — adding a new note
 
 1. Pick a topic folder under `topics/live/`. If none fits, create it: `mkdir topics/live/<new-topic>`.
-2. Run `bin/new-note <topic> <slug>` to scaffold the file with frontmatter and drop a log entry.
+2. Run `bin/new-note <topic> <slug>` to scaffold the file with frontmatter.
 3. Write the note in mj-rewrite voice (see below).
 4. If the topic folder is new and worth introducing, write a short `_.md` landing page.
 5. Run `bin/index` to refresh `topics/_.md`.
-6. Commit. The log entry already records the event; no separate Timeline update needed.
+6. Commit.
 
 ## Workflow — coming back to a topic after months
 
@@ -57,7 +55,7 @@ Three top-level content dirs: `topics/`, `log/`, `builds/`. No `journal/`, no `n
 
 ## Voice
 
-All generated prose (READMEs, notes, summaries, build pages, log entries) must pass through the `mj-rewrite` agent at `.claude/agents/mj-rewrite.md` before being written to disk. Hard bans: em dashes, "delve", "robust", "leverage", "comprehensive", "ensure" as filler, generic AI sound. MJ's existing journal entries stay verbatim.
+All generated prose (READMEs, notes, summaries, build pages) must pass through the `mj-rewrite` agent at `.claude/agents/mj-rewrite.md` before being written to disk. Hard bans: em dashes, "delve", "robust", "leverage", "comprehensive", "ensure" as filler, generic AI sound. MJ's existing journal entries stay verbatim.
 
 ## What this repo is NOT
 
