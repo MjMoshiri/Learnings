@@ -5,7 +5,7 @@ status: wip
 
 # concurrent system
 
-Notes from Elixir in Action ch 7. One process per list. A cache that finds or starts them. Persistence as another process. The work is deciding what is a process.
+One process per list. A cache that finds or starts them. Persistence as another process. The work is deciding what is a process.
 
 ## mix, briefly
 

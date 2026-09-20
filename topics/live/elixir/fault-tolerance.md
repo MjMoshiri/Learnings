@@ -5,7 +5,7 @@ status: wip
 
 # fault tolerance
 
-Notes from Elixir in Action ch 8. Anything can fail. Isolation first, then detection, then restart. Concurrency is the error-handling tool.
+Anything can fail. Isolation first, then detection, then restart. Concurrency is the error-handling tool.
 
 ## the goal
 
@@ -41,7 +41,7 @@ Isolation isn't enough. Clients still need the process that died. You have to no
 
 Links transit. Crash one, take the tree.
 
-That's the opposite of isolation. A link is how death travels.
+A link is how death travels. Opposite of isolation.
 
 **Trap exits** if you want the signal as a message instead of death:
 
@@ -62,7 +62,7 @@ Unidirectional. `Process.monitor(pid)` returns a ref. If the target dies, you ge
 
 A supervisor starts children, watches them, restarts them. Workers do the actual work.
 
-`Supervisor.start_link(children, strategy: :one_for_one)`. `:one_for_one` restarts the one that died. Other strategies in ch 9.
+`Supervisor.start_link(children, strategy: :one_for_one)`. `:one_for_one` restarts the one that died.
 
 Restart means a new process. New pid. Old state is gone.
 
@@ -94,7 +94,7 @@ Callback-module form (`use Supervisor`, `init/1`): same result, more control. Us
 
 Supervising only the cache isn't enough. Kill the cache, it restarts empty, and the old `Todo.Server` processes are still running, unreachable. Garbage.
 
-Link the whole structure: cache ↔ servers, cache ↔ database, database ↔ workers. Crash anywhere, the tree dies, the supervisor starts a clean one. Wide blast radius. Fine for now. Ch 9 narrows it.
+Link the whole structure: cache ↔ servers, cache ↔ database, database ↔ workers. Crash anywhere, the tree dies, the supervisor starts a clean one. Wide blast radius.
 
 Switch every `GenServer.start` to `start_link`.
 
@@ -102,7 +102,7 @@ Switch every `GenServer.start` to `start_link`.
 
 Default: 3 restarts in 5 seconds. Exceed it, the supervisor gives up and dies, taking children with it.
 
-That's intentional. If restarting doesn't fix it, looping forever isn't a strategy. In a tree, the parent supervisor then restarts a larger piece. Ch 9.
+That's intentional. If restarting doesn't fix it, looping forever isn't a strategy. In a tree, the parent supervisor then restarts a larger piece.
 
 `:kill` as an exit reason bypasses trapping. Unconditional death. Use it when you want to be sure.
 

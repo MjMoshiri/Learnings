@@ -5,11 +5,11 @@ status: wip
 
 # supervision trees
 
-Notes from Elixir in Action ch 9. Ch 8 gave you a supervisor. Now shrink the blast radius. Start workers from supervisors, not from other workers. Recover locally. Escalate only if that fails.
+Shrink the blast radius. Start workers from supervisors, not from other workers. Recover locally. Escalate only if that fails.
 
 ## start workers from supervisors
 
-The ch 8 tree was fully linked. Crash anywhere, the whole system restarts. Correct, no orphans. Too coarse. A database glitch killed the cache. A dead list killed every worker.
+A fully linked tree: crash anywhere, the whole system restarts. Correct, no orphans. Too coarse. A database glitch killed the cache. A dead list killed every worker.
 
 That happened because workers started other workers. Cache started the database. Database started the pool. The pids lived in worker state. Death followed the links.
 
@@ -85,11 +85,11 @@ Database workers are a fixed pool. You know the children up front. To-do servers
 
 The second is GenServer registration failing before `init`. Same name, existing pid. You wanted that process anyway.
 
-Every request hitting the supervisor is a bottleneck. Starting a child that immediately dies because the name is taken is wasted work. Fine for now. Distributed registry in ch 12.
+Every request hitting the supervisor is a bottleneck. Starting a child that immediately dies because the name is taken is wasted work. Fine for now.
 
 To-do servers are `restart: :temporary`. Crash, don't restart. Next `server_process` starts a new one. A corrupt list can't take down the cache by burning restart intensity.
 
-Why supervise them at all? Isolation: one list dying doesn't touch the others. Shutdown: stop `Todo.Cache`, every list dies. Supervision is not only restart.
+Why supervise them at all? Isolation: one list dying doesn't touch the others. Shutdown: stop `Todo.Cache`, every list dies.
 
 ## let it crash, for real
 
@@ -101,9 +101,9 @@ Two cases you handle yourself:
 
 2. **Expected errors.** File missing (`:enoent`) is a miss. Return `nil`. Permission denied is not expected. Let the match fail. `File.write!` on store: if you can't persist, the worker has failed. Fail fast. Restarting may not help. Then the supervisor gives up and the system stops. Right call if you can't write.
 
-Restart throws the mailbox away and starts with empty state. Some in-flight requests fail. The new process is clean. That's the point.
+Restart throws the mailbox away and starts with empty state. Some in-flight requests fail. The new process is clean.
 
-State does not survive. If you need it, persist it yourself, outside the process. Restore in `handle_continue`. Persist after the full transformation, not in the middle. That's when the state is consistent.
+State does not survive. If you need it, persist it yourself, outside the process. Restore in `handle_continue`. Persist after the full transformation, when the state is consistent.
 
 Careful: if the crash was caused by bad state and you persist that state, restart loads the poison and dies again. If you can afford it, start clean and take the dependents down with you.
 

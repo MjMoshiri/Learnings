@@ -9,7 +9,7 @@ A process is a lightweight concurrent unit. Isolated, no shared memory. Messages
 
 ## processes and the scheduler
 
-A BEAM process is not an OS process. Starts small, a couple of KB. Own heap, own mailbox, own garbage collection. Crash one, the others keep going. You can run a lot of them.
+A BEAM process starts small, a couple of KB. Own heap, own mailbox, own garbage collection. Crash one, the others keep going. You can run a lot of them.
 
 The VM runs one scheduler thread per core. Each scheduler picks runnable processes. Preemption is by reduction count: function calls (and some BIFs) count as reductions. Hit the quota, you're swapped out. A busy loop doesn't pin a core and starve everyone else. You don't pick which core a process runs on.
 
@@ -62,7 +62,7 @@ end
 
 `after` is milliseconds. `after 0` checks the mailbox and moves on if nothing matches. No `after` means wait forever.
 
-## request-response is a pattern, not a primitive
+## request-response is a pattern
 
 Send is async. If you want a reply, send your pid, then receive:
 
@@ -73,7 +73,7 @@ receive do
 end
 ```
 
-That's the whole trick. Synchronous calls are this plus a timeout. Later OTP wraps it. The VM does not.
+Synchronous calls are this plus a timeout. Later OTP wraps it. The VM does not.
 
 ## stateful server
 
@@ -112,7 +112,7 @@ end
 
 `start/0` returns a pid. Clients talk to that pid. `loop/1` never returns. Tail recursive, so the stack doesn't grow. The next state is whatever the receive clause returns.
 
-The state is private. Other processes can't read it. They send a message and wait for a reply. That's the isolation: no shared memory, so no locks.
+The state is private. Other processes can't read it. They send a message and wait for a reply. Isolation: no shared memory, so no locks.
 
 ## register
 

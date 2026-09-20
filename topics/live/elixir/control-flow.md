@@ -33,7 +33,7 @@ The same name twice in one pattern means those positions must be equal:
 {amount, amount, amount} = {127, 127, 1}    # MatchError
 ```
 
-That's not the pin. Pin (`^x`) is for a variable already bound outside the pattern. Same name in one pattern is a same-value constraint.
+Pin (`^x`) is for a variable already bound outside the pattern. Same name in one pattern is a same-value constraint.
 
 Numbers in patterns compare strictly: `1` does not match `1.0`. Tuples match on size. Lists: `[head | tail]`. Empty list is a separate clause. Maps match a subset: `%{name: n} = %{name: "meg", age: 23}` works. `%{}` matches every map.
 

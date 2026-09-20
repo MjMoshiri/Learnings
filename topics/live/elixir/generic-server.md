@@ -70,7 +70,7 @@ Clients call `KeyValueStore.get/2`. They never see `ServerProcess`. The callback
 
 ## behaviours
 
-A behaviour is this split, made into a contract. The generic module drives the process. The callback module plugs in. When the generic code needs a decision, it invokes a callback.
+A behaviour is that split as a contract. The generic module drives the process. The callback module plugs in.
 
 You declare the contract with `@callback`. You claim an implementation with `@behaviour`. `@impl` marks a function as a callback so the compiler checks the name and arity against the behaviour.
 
@@ -144,13 +144,11 @@ You talk to the process through the `GenServer` module. Don't send homemade `{:c
 
 ## call vs cast
 
-Two request types.
-
 **Cast** is fire and forget. `GenServer.cast(pid, request)` sends and returns `:ok` immediately. No reply. No wait. If the server is dead, the message is dropped and the caller doesn't find out. Use it when you don't need a result.
 
 **Call** is send and wait. `GenServer.call(pid, request)` sends, then blocks until a reply arrives, the timeout fires (default 5 seconds), or the server crashes. If the server dies mid-call, the caller exits too, unless it's trapping exits. Use it when you need a value, or when you need to know the request was handled.
 
-The server still handles one message at a time. A slow `handle_call` blocks casts sitting in the mailbox. Cast is not "concurrent with calls." It's "the caller doesn't wait."
+The server still handles one message at a time. A slow `handle_call` blocks casts sitting in the mailbox. Cast means the caller doesn't wait.
 
 `handle_info/2` is the escape hatch for everything that isn't a call or a cast: `send/2`, `:DOWN` messages, `Process.send_after/3`. Same return shape as cast: `{:noreply, new_state}`.
 

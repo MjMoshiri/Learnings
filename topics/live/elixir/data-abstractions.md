@@ -5,11 +5,11 @@ status: wip
 
 # data abstractions
 
-Notes from Elixir in Action ch 4. Higher-level types (`Fraction`, `User`, `Money`) are maps plus a module. The module's functions create, change, and query the data. Clients can still see the whole structure.
+Higher-level types (`Fraction`, `User`, `Money`) are maps plus a module. The module's functions create, change, and query the data. Clients can still see the whole structure.
 
 ## modules as abstractions
 
-Data is separate from code. You don't call methods on an object. You call `Fraction.new/2`, then pass that value back into `Fraction.add/2`. The client shouldn't care that a fraction is two integers in a map.
+Data is separate from code. Call `Fraction.new/2`, then pass that value back into `Fraction.add/2`. The client shouldn't care that a fraction is two integers in a map.
 
 ```elixir
 defmodule Fraction do
@@ -195,6 +195,6 @@ Access is not in this list.
 
 A module is the abstraction. Its functions create, manipulate, and query data. Clients can see the whole structure. They shouldn't rely on its shape.
 
-Maps group fields. Structs are named maps tied to a module. That's the data abstraction you actually ship.
+Maps group fields. Structs are named maps tied to a module.
 
 Polymorphism is protocols. The protocol is the interface the generic code calls. `defimpl` is the per-type body.
