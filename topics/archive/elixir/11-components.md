@@ -1,7 +1,7 @@
 ---
 
 topic: elixir
-status: wip
+status: done
 -----------
 
 # working with components

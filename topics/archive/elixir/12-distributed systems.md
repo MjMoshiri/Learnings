@@ -1,7 +1,7 @@
 ---
 
 topic: elixir
-status: wip
+status: done
 -----------
 
 # building a distributed system

@@ -1,6 +1,6 @@
 ---
 topic: elixir
-status: wip
+status: done
 ---
 
 # beyond genserver
