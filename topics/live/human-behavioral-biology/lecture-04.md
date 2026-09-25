@@ -1,6 +1,8 @@
-# The gist
+# Lecture 4: Recognizing Relatives
 
-- Lecture 2's kin selection assumed organisms just know who their relatives are. Lecture 4 is about the actual mechanisms behind that assumption.
+## The gist
+
+- Kin selection assumes organisms know who their relatives are. This is about the actual mechanisms that make that possible.
 - Kin selection and inbreeding avoidance pull in opposite directions: cooperate/mate with relatives vs. don't mate with relatives (recessive mutations go homozygous and get expressed). Theoretical models balancing the two predict the sweet spot is third cousins.
 - That prediction holds up. Birds seek out third cousins for mating even after dispersing, and third-cousin offspring survive best. Iceland's genealogical records show the same thing in humans historically: third-cousin marriages had the best reproductive outcomes.
 - Cheney and Seyfarth's baboon playback experiments: baboons only react strongly to a "dominance reversal" (a low-rank animal sounding dominant over a high-rank one) when it crosses family lines. They're tracking kinship and rank as separate variables, even for a neighboring troop.

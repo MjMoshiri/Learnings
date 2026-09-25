@@ -1,4 +1,6 @@
-# The gist
+# Lecture 1: Introduction to Human Behavioral Biology
+
+## The gist
 
 - We bucket behavior into clean labels — genetic, cultural, hormonal — and the buckets give wrong answers.
 - Two ideas in the same bucket look more alike than they are. Two in different buckets look more different. Everything at the boundary gets lost.

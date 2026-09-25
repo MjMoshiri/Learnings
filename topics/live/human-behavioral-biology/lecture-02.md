@@ -1,4 +1,6 @@
-# The gist
+# Lecture 2: Behavioral Evolution I
+
+## The gist
 
 - Evolution applies to behavior, not just bodies. Behavior is usually a gene-level strategy, not random kindness or wisdom for the species.
 - Sapolsky spends the lecture killing the old group selection story: animals sacrificing themselves for the good of the species. Selection usually cares about what gets genes copied, not what helps the herd.

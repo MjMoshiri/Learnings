@@ -1,6 +1,8 @@
-# The gist
+# Lecture 3: Behavioral Evolution II
 
-- Lecture 3 finishes the evolution arc. Same tools as before (individual, kin, reciprocal), now pointed at competition between the sexes and at the cracks in the whole adaptationist story.
+## The gist
+
+- Same tools (individual, kin, reciprocal selection), now pointed at competition between the sexes and at the cracks in the whole adaptationist story.
 - Males and females play different games because the cheap cell and the expensive cell set different incentives. Sperm is cheap. Eggs and gestation are not. That asymmetry drives most of what follows.
 - Sexual dimorphism splits animals into two stable species types. Dimorphic (tournament) species: sexes look very different, males much bigger, males fight hard for access, little paternal care, a few males father most of the offspring, low paternity certainty. Monomorphic (pair-bonding) species: sexes look alike, closer to monogamy, males invest in the young, higher paternity certainty.
 - Humans sit awkwardly between the two. Some of our biology reads tournament, some reads pair-bonding. We are not a clean case, and that confusion shows up all over human mating.

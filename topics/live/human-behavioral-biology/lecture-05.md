@@ -1,4 +1,6 @@
-# The gist
+# Lecture 5: Molecular Genetics
+
+## The gist
 
 - Three mutation types: point, deletion, insertion. Indels frameshift everything downstream. Point mutations that leave a protein working slightly better or worse are the molecular engine of gradualism.
 - Single genes reach into behavior: a calcium channel mutation raises autism risk, a dopamine transporter mutation gives mice anhedonia, D4 insertions raise ADHD risk, vasopressin receptor insertions shift pair-bond fidelity.
